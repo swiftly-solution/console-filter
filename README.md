@@ -1,1 +1,1 @@
-# Swiftly - Base Extension
+# Swiftly - Console Filter
