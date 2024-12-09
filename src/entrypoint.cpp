@@ -61,8 +61,6 @@ bool ConsoleFilter::Load(std::string& error, SourceHook::ISourceHook *SHPtr, ISm
         return false;
     }
 
-    ConVar_Register(FCVAR_RELEASE | FCVAR_SERVER_CAN_EXECUTE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
-
     LoadFilters();
 
     if(FetchConfigValue<bool>("core.console_filtering"))

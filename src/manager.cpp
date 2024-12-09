@@ -3,7 +3,7 @@
 void SwiftlyConFilterManagerHelp()
 {
     g_SMAPI->ConPrint("[Console Filter] Swiftly Console Filter Menu\n");
-    g_SMAPI->ConPrint("[Console Filter] Usage: swiftly confilter <command>\n");
+    g_SMAPI->ConPrint("[Console Filter] Usage: sw_confilter <command>\n");
     g_SMAPI->ConPrint("[Console Filter]  disable    - Disables the Console Filter.\n");
     g_SMAPI->ConPrint("[Console Filter]  enable     - Enables the Console Filter.\n");
     g_SMAPI->ConPrint("[Console Filter]  reload     - Reloads the Console Filter messages.\n");
