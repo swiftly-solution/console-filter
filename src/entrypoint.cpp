@@ -55,11 +55,7 @@ bool ConsoleFilter::Load(std::string& error, SourceHook::ISourceHook *SHPtr, ISm
         return false;
     }
 
-    g_pCVar = (ICvar *)ismm->VInterfaceMatch(ismm->GetEngineFactory(), CVAR_INTERFACE_VERSION);
-    if(!g_pCVar) {
-        error = "Could not find interface: " CVAR_INTERFACE_VERSION;
-        return false;
-    }
+    GET_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION); 
 
     LoadFilters();
 
