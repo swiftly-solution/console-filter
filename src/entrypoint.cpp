@@ -2,6 +2,7 @@
 #include <swiftly-ext/config.h>
 #include <fstream>
 #include <tier1/convar.h>
+#include <swiftly-ext/files.h>
 
 //////////////////////////////////////////////////////////////
 /////////////////        Core Variables        //////////////
@@ -101,7 +102,7 @@ void ConsoleFilter::LoadFilters()
     filter.clear();
     counter.clear();
 
-    std::ifstream ifs("addons/swiftly/configs/console_filter.json");
+    std::ifstream ifs(GeneratePath("addons/swiftly/configs/console_filter.json"));
     if(!ifs.is_open()) {
         ConFilterError("Failed to open 'addons/swiftly/configs/console_filter.json'.");
         return;
