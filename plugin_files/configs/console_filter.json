@@ -32,5 +32,8 @@
     "teamtcounter": "Team CT",
     "roundend": "World triggered Round_End",
     "laterecv": "LATE Recv",
-    "generatesubstitute": "generating substitute"
+    "generatesubstitute": "generating substitute",
+    "texturebase": "texturebase.cpp",
+    "CNavMesh": "CNavMesh::TestRayToMesh",
+    "CRecipientFilter": "CRecipientFilter::AddAllPlayers"
 }
