@@ -35,5 +35,6 @@
     "texturebase": "texturebase.cpp",
     "CNavMesh": "CNavMesh::TestRayToMesh",
     "CRecipientFilter": "CRecipientFilter::AddAllPlayers",
-    "CNavGenParams": "CNavGenParams -"
+    "CNavGenParams": "CNavGenParams -",
+    "Framerate_Report": "Framerate spike report"
 }
