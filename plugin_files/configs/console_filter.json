@@ -36,5 +36,11 @@
     "CNavMesh": "CNavMesh::TestRayToMesh",
     "CRecipientFilter": "CRecipientFilter::AddAllPlayers",
     "CNavGenParams": "CNavGenParams -",
-    "Framerate_Report": "Framerate spike report"
+    "Framerate_Title": "Framerate spike report",
+    "Framerate_Spacer": "-+\\s+-+\\s+-+\\s+-+",
+    "Framerate_Header": "excl ms   excl %   incl ms   group",
+    "Framerate_Values": "\\d+\\.\\d+ms\\s+\\d+\\.\\d+%\\s+\\d+\\.\\d+ms\\s+[A-Za-z\\s]+",
+    "Framerate_Total": "FrameTotal:\\s+\\d+\\.\\d+ms,\\s+\\s*tolerance:\\s+\\d+\\.\\d+ms",
+    "ClientPutInServer": "ClientPutInServer",
+    "IGameSystem": "IGameSystem::"
 }
