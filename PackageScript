@@ -37,4 +37,4 @@ gamedata_folder = builder.AddFolder(os.path.join('addons', 'swiftly', 'gamedata'
 builder.AddCopy(os.path.join(builder.sourcePath, 'plugin_files', 'gamedata', 'consolefilter', 'signatures.json'), gamedata_folder)
 
 configs_folder = builder.AddFolder(os.path.join('addons', 'swiftly', 'configs'))
-builder.AddCopy(os.path.join(builder.sourcePath, 'plugin_files', 'configs', 'console_filter.json'), configs_folder)
+builder.AddCopy(os.path.join(builder.sourcePath, 'plugin_files', 'configs', 'console_filter.example.json'), configs_folder)
