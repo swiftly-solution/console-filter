@@ -60,8 +60,6 @@ bool ConsoleFilter::Load(std::string& error, SourceHook::ISourceHook* SHPtr, ISm
 
     LoadFilters();
 
-    ConVar_Register(FCVAR_RELEASE | FCVAR_SERVER_CAN_EXECUTE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL, [](ConVarRefAbstract* ref) {}, [](ConCommandRef* ref) {});
-
     if (FetchConfigValue<bool>("core.console_filtering"))
         Toggle();
 
