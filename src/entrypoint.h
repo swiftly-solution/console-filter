@@ -5,7 +5,8 @@
 
 #include <swiftly-ext/core.h>
 #include <swiftly-ext/extension.h>
-#include <swiftly-ext/hooks/NativeHooks.h>
+#include <swiftly-ext/hooks/function.h>
+#include <swiftly-ext/hooks/vfunction.h>
 
 #include <regex>
 #include <string>
@@ -15,8 +16,6 @@
 #include <rapidjson/error/en.h>
 #include <rapidjson/istreamwrapper.h>
 
-int Hook_CLoggingSystem_LogDirect(void*, int, int, LeafCodeInfo_t*, LoggingMetaData_t*, Color, char const*, va_list*);
-
 class ConsoleFilter : public SwiftlyExt
 {
 private:
@@ -25,9 +24,9 @@ private:
     std::map<std::string, uint64> counter;
 
 public:
-    bool Load(std::string& error, SourceHook::ISourceHook *SHPtr, ISmmAPI* ismm, bool late);
+    bool Load(std::string& error, SourceHook::ISourceHook* SHPtr, ISmmAPI* ismm, bool late);
     bool Unload(std::string& error);
-    
+
     void AllExtensionsLoaded();
     void AllPluginsLoaded();
 
@@ -49,7 +48,7 @@ public:
 };
 
 template <typename... Args>
-std::string string_format(const std::string &format, Args... args)
+std::string string_format(const std::string& format, Args... args)
 {
     int size_s = snprintf(nullptr, 0, format.c_str(), args...) + 1;
     if (size_s <= 0)

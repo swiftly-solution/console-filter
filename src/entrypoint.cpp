@@ -9,21 +9,19 @@
 ////////////////////////////////////////////////////////////
 
 ConsoleFilter g_Ext;
-CUtlVector<FuncHookBase *> g_vecHooks;
 CREATE_GLOBALVARS();
 
 //////////////////////////////////////////////////////////////
 /////////////////             Hooks            //////////////
 ////////////////////////////////////////////////////////////
 
-FuncHook<decltype(Hook_CLoggingSystem_LogDirect)> CLoggingSystem_LogDirect(Hook_CLoggingSystem_LogDirect, "CLoggingSystem_LogDirect");
-
-int Hook_CLoggingSystem_LogDirect(void* _this, int chan, int severity, LeafCodeInfo_t* leafCode, LoggingMetaData_t* meta, Color color, char const* str, va_list* args)
+dyno::ReturnAction Hook_CLoggingSystem_LogDirect(dyno::CallbackType cbType, dyno::IHook& hook)
 {
-    if (!g_Ext.Status()) return CLoggingSystem_LogDirect(_this, chan, severity, leafCode, meta, color, str, args);
+    if (!g_Ext.Status()) return dyno::ReturnAction::Ignored;
 
+    va_list* args = hook.getArgument<va_list*>(7);
+    const char* str = hook.getArgument<const char*>(6);
     char buf[MAX_LOGGING_MESSAGE_LENGTH];
-
     if (args) {
         va_list cpargs;
         va_copy(cpargs, *args);
@@ -31,9 +29,15 @@ int Hook_CLoggingSystem_LogDirect(void* _this, int chan, int severity, LeafCodeI
         va_end(cpargs);
     }
 
-    if (g_Ext.NeedFiltering((args ? buf : str))) return 0;
-    return CLoggingSystem_LogDirect(_this, chan, severity, leafCode, meta, color, str, args);
+    if (g_Ext.NeedFiltering((args ? buf : str))) {
+        hook.setReturn<int>(0);
+        return dyno::ReturnAction::Supercede;
+    }
+
+    return dyno::ReturnAction::Ignored;
 }
+
+FunctionHook CLoggingSystem_LogDirect("CLoggingSystem_LogDirect", dyno::CallbackType::Pre, Hook_CLoggingSystem_LogDirect, "piipppsp", 'i');
 
 //////////////////////////////////////////////////////////////
 /////////////////          Core Class          //////////////
@@ -48,19 +52,15 @@ void ConFilterError(std::string text)
 }
 
 EXT_EXPOSE(g_Ext);
-bool ConsoleFilter::Load(std::string& error, SourceHook::ISourceHook *SHPtr, ISmmAPI* ismm, bool late)
+bool ConsoleFilter::Load(std::string& error, SourceHook::ISourceHook* SHPtr, ISmmAPI* ismm, bool late)
 {
     SAVE_GLOBALVARS();
-    if(!InitializeHooks()) {
-        error = "Failed to initialize hooks.";
-        return false;
-    }
 
-    GET_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION); 
+    GET_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
 
     LoadFilters();
 
-    if(FetchConfigValue<bool>("core.console_filtering"))
+    if (FetchConfigValue<bool>("core.console_filtering"))
         Toggle();
 
     return true;
@@ -68,7 +68,6 @@ bool ConsoleFilter::Load(std::string& error, SourceHook::ISourceHook *SHPtr, ISm
 
 bool ConsoleFilter::Unload(std::string& error)
 {
-    UnloadHooks();
     return true;
 }
 
@@ -103,7 +102,7 @@ void ConsoleFilter::LoadFilters()
     counter.clear();
 
     std::ifstream ifs(GeneratePath("addons/swiftly/configs/console_filter.json"));
-    if(!ifs.is_open()) {
+    if (!ifs.is_open()) {
         ConFilterError("Failed to open 'addons/swiftly/configs/console_filter.json'.");
         return;
     }
@@ -151,11 +150,11 @@ bool ConsoleFilter::NeedFiltering(std::string message)
 
     for (auto it = filter.begin(); it != filter.end(); ++it)
     {
-        std::string key = it->first;
         std::regex val = it->second;
 
         if (std::regex_search(message, val))
         {
+            std::string key = it->first;
             counter[key]++;
             return true;
         }
