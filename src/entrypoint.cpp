@@ -150,11 +150,11 @@ bool ConsoleFilter::NeedFiltering(std::string message)
 
     for (auto it = filter.begin(); it != filter.end(); ++it)
     {
-        std::regex val = it->second;
+        std::regex& val = it->second;
 
         if (std::regex_search(message, val))
         {
-            std::string key = it->first;
+            std::string& key = it->first;
             counter[key]++;
             return true;
         }
