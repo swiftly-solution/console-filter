@@ -8,7 +8,7 @@
 #include <swiftly-ext/hooks/function.h>
 #include <swiftly-ext/hooks/vfunction.h>
 
-#include <regex>
+#include <pcre2.h>
 #include <string>
 #include <map>
 
@@ -20,7 +20,7 @@ class ConsoleFilter : public SwiftlyExt
 {
 private:
     bool m_status = false;
-    std::map<std::string, std::regex> filter;
+    std::map<std::string, pcre2_code*> filter;
     std::map<std::string, uint64> counter;
 
 public:

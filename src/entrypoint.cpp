@@ -98,6 +98,9 @@ void ConsoleFilter::Toggle()
 
 void ConsoleFilter::LoadFilters()
 {
+    for (auto it = filter.begin(); it != filter.end(); ++it)
+        pcre2_code_free(it->second);
+
     filter.clear();
     counter.clear();
 
@@ -127,18 +130,18 @@ void ConsoleFilter::LoadFilters()
             continue;
         }
 
-        try
-        {
-            std::regex tmp(it->value.GetString(), std::regex_constants::ECMAScript | std::regex_constants::optimize | std::regex_constants::nosubs);
-        }
-        catch (const std::regex_error& err)
-        {
+        pcre2_code* re;
+        PCRE2_SIZE erroffset;
+        int errorcode;
+
+        re = pcre2_compile((PCRE2_SPTR8)(it->value.GetString()), PCRE2_ZERO_TERMINATED, 0, &errorcode, &erroffset, nullptr);
+        if (!re) {
             ConFilterError(string_format("The regex for \"%s\" is not valid.", key.c_str()));
-            ConFilterError(string_format("Error: %s", err.what()));
+            ConFilterError(string_format("Error: Failed to compile at offset %d.", erroffset));
             continue;
         }
 
-        filter.insert({ key, std::regex(it->value.GetString(), std::regex_constants::ECMAScript | std::regex_constants::optimize | std::regex_constants::nosubs) });
+        filter.insert({ key, re });
         counter.insert({ key, 0 });
     }
 }
@@ -148,16 +151,23 @@ bool ConsoleFilter::NeedFiltering(std::string message)
     if (!Status())
         return false;
 
+    PCRE2_SPTR str = (PCRE2_SPTR)(message.c_str());
+    int len = message.size();
+
     for (auto it = filter.begin(); it != filter.end(); ++it)
     {
-        std::regex& val = it->second;
+        pcre2_code* re = it->second;
+        pcre2_match_data* match_data = pcre2_match_data_create_from_pattern(re, nullptr);
 
-        if (std::regex_search(message, val))
+        if (pcre2_match(re, str, len, 0, 0, match_data, nullptr) > 0)
         {
-            std::string& key = it->first;
+            const std::string& key = it->first;
             counter[key]++;
+            pcre2_match_data_free(match_data);
             return true;
         }
+
+        pcre2_match_data_free(match_data);
     }
 
     return false;
