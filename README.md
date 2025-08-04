@@ -5,7 +5,7 @@
     Swiftly - Console Filter
     <br/>
     <a href="https://github.com/swiftly-solution/console-filter/issues">Report Bug</a>
-    <a href="https://swiftlycs2.net/discord">Discord Server</a>
+    <a href="https://swiftlys2.net/discord">Discord Server</a>
   </p>
 </p>
 
@@ -23,7 +23,7 @@
 -   [AMBuild](https://github.com/alliedmodders/ambuild) (MAKE SURE `ambuild` COMMAND IS AVAILABLE VIA `PATH` FOR WINDOWS)
 ---
 ### For Developers
-- [Documentation](https://swiftlycs2.net/docs-exts)
+- [Documentation](https://swiftlys2.net/ext-docs)
 ---
 ### Building Commands
 
@@ -38,4 +38,10 @@ git clone --recurse-submodules https://github.com/swiftly-solution/console-filte
 ```
 ./setup.ps1 - Windows
 ./setup.sh - Linux
+```
+
+#### Build using Docker
+
+```
+docker run --rm -it -e "FOLDER=ext" -e "GAME=cs2" -v .:/ext ghcr.io/swiftly-solution/swiftly:cross-compiler
 ```

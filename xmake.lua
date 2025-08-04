@@ -28,7 +28,6 @@ target(PROJECT_NAME)
     add_files("build/proto/**.cc")
 
     --[[ Vendor Section ]]
-
     add_packages("pcre2")
 
     add_files("vendor/swiftly-ext/**.cpp")
@@ -77,7 +76,7 @@ target(PROJECT_NAME)
 
     on_load(function(target)
         local protoc = is_plat("windows") and SDK_PATH.."/devtools/bin/protoc.exe" or SDK_PATH.."/devtools/bin/linux/protoc" 
-        local args = "--proto_path="..SDK_PATH.."/thirdparty/protobuf-3.21.8/src --proto_path=./protobufs --proto_path="..SDK_PATH.."/public --proto_path="..SDK_PATH.."/public/engine --proto_path="..SDK_PATH.."/public/mathlib --proto_path="..SDK_PATH.."/public/vstdlib --proto_path="..SDK_PATH.."/public/tier0 --proto_path="..SDK_PATH.."/public/tier1 --proto_path="..SDK_PATH.."/public/entity2 --proto_path="..SDK_PATH.."/public/game/server --proto_path="..SDK_PATH.."/game/shared --proto_path="..SDK_PATH.."/game/server --proto_path="..SDK_PATH.."/common --cpp_out=build/proto"
+        local args = "--proto_path="..SDK_PATH.."/thirdparty/protobuf-3.21.8/src --proto_path=./protobufs --proto_path="..SDK_PATH.."/public --proto_path="..SDK_PATH.."/public/engine --proto_path="..SDK_PATH.."/public/mathlib --proto_path="..SDK_PATH.."/public/tier0 --proto_path="..SDK_PATH.."/public/tier1 --proto_path="..SDK_PATH.."/public/entity2 --proto_path="..SDK_PATH.."/public/game/server --proto_path="..SDK_PATH.."/game/shared --proto_path="..SDK_PATH.."/game/server --proto_path="..SDK_PATH.."/common --cpp_out=build/proto"
 
         function mysplit (inputstr, sep)
             if sep == nil then sep = "%s" end
@@ -95,7 +94,16 @@ target(PROJECT_NAME)
             local splitted = mysplit(sourcefile, "/")
             local filename = splitted[#splitted]
 
-            os.iorun(protoc .. " "..args.." --dependency_out=build/proto/"..filename..".d "..sourcefile)
+            try {
+                function()
+                    os.iorun(protoc .. " "..args.." --dependency_out=build/proto/"..filename..".d "..sourcefile)
+                end,
+                catch {
+                    function(err)
+                        print(err)
+                    end
+                }
+            }
         end
     end)
 
@@ -330,7 +338,9 @@ target(PROJECT_NAME)
             os.rmdir("build/package")
         end
 
-        os.cp("plugin_files/", 'build/package/addons/swiftly')
+        if os.exists("plugin_files") then
+            os.cp("plugin_files/", 'build/package/addons/swiftly')
+        end
         os.mkdir('build/package/addons/swiftly/extensions/'..GetDistDirName())
         os.cp(target:targetfile(), 'build/package/addons/swiftly/extensions/'..GetDistDirName().."/"..PROJECT_NAME.."."..(is_plat("windows") and "dll" or "so"))
     end)
