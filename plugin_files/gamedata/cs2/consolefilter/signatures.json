@@ -1,7 +1,7 @@
 {
     "CLoggingSystem_LogDirect": {
         "lib": "tier0",
-        "windows": "4C 89 4C 24 20 44 89 44 24 18 89 54 24 10 55",
-        "linux": "55 89 D0 48 89 E5 41 57 41 56 41 55"
+        "windows": "4C 89 4C 24 2A 44 89 44 24 2A 89 54 24 2A 55",
+        "linux": "55 49 89 FA 31 C0"
     }
 }
