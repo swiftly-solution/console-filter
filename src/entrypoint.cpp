@@ -19,8 +19,8 @@ dyno::ReturnAction Hook_CLoggingSystem_LogDirect(dyno::CallbackType cbType, dyno
 {
     if (!g_Ext.Status()) return dyno::ReturnAction::Ignored;
 
-    va_list* args = hook.getArgument<va_list*>(7);
-    const char* str = hook.getArgument<const char*>(6);
+    va_list* args = hook.getArgument<va_list*>(5);
+    const char* str = hook.getArgument<const char*>(4);
     char buf[MAX_LOGGING_MESSAGE_LENGTH];
     if (args) {
         va_list cpargs;
@@ -37,7 +37,7 @@ dyno::ReturnAction Hook_CLoggingSystem_LogDirect(dyno::CallbackType cbType, dyno
     return dyno::ReturnAction::Ignored;
 }
 
-FunctionHook CLoggingSystem_LogDirect("CLoggingSystem_LogDirect", dyno::CallbackType::Pre, Hook_CLoggingSystem_LogDirect, "piipppsp", 'i');
+FunctionHook CLoggingSystem_LogDirect("CLoggingSystem_LogDirect", dyno::CallbackType::Pre, Hook_CLoggingSystem_LogDirect, "puipsp", 'U');
 
 //////////////////////////////////////////////////////////////
 /////////////////          Core Class          //////////////
